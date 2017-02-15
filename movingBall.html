@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>小球动画</title>
+  <style type="text/css">
+    .wrap{
+      width:800px;
+      height: 400px;
+      margin: 60px auto;
+      position: relative;
+    }
+    .controller{
+      width:250px;
+      height: 100px;
+      top:30px;
+      left: 30px;
+      background-color:rgba(0,85,116,0.7);
+      padding: 5px 20px 25px 20px;
+      border-radius: 10px;
+      position: absolute;
+    }
+    .controller h3{
+      color: white;
+      text-align: center;
+    }
+    #canvas-btn{
+      display: inline-block;
+      color: white;
+      font-size: 14px;
+      padding: 5px 15px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top:10px;
+      margin-right: 20px;
+      background-color: #8b0;
+    }
+    #canvas-btn:hover{
+      text-decoration: none;
+      background-color:#7a0;
+
+    }
+
+    .color-btn{
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 3px;
+      font-size:14px;
+      margin-top: 10px;
+      margin-right: 5px;
+      text-decoration: none;
+    }
+    #white-color-btn{
+      background-color: white;
+    }
+    #black-color-btn{
+      background-color:black;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+<canvas id="canvas" style="border: 1px solid black;display: block;"></canvas>
+<div class="controller">
+  <h3>Canvas绘图之旅</h3>
+  <a id="canvas-btn" href="javascript:">停止运动</a>
+  <a id="white-color-btn" class="color-btn" href="javascript:">&nbsp;</a>
+  <a id="black-color-btn" class="color-btn" href="javascript:">&nbsp;</a>
+</div>
+</div>
+<script>
+  var balls=[];
+  var ismoving=true;
+  var themcolor="white";
+  window.onload=function(){
+
+    var canvas=document.getElementById("canvas");
+    var context=canvas.getContext("2d");
+    canvas.width=800;
+    canvas.height=400;
+    //随机小球
+    for(var i=0;i<50;i++){
+
+        var R=Math.round(Math.random()*255);
+        var G=Math.round(Math.random()*255);
+        var B=Math.round(Math.random()*255);
+        var r=Math.round(Math.random()*20)+20;
+        aBall={
+          color:"rgb("+R+","+G+","+B+")",
+          x:Math.round(Math.random()*canvas.width-2*r)+r,
+          y:Math.round(Math.random()*canvas.height-2*r)+r,
+          r:r,
+          vx:(Math.random()*5+5)*Math.pow(-1,Math.floor(Math.random()*100)),
+          vy:(Math.random()*5+5)*Math.pow(-1,Math.floor(Math.random()*100))
+        }
+        balls[i]=aBall;
+    }
+    setInterval(
+      function(){
+
+        drawball(context);
+        if(ismoving){
+        update();}
+
+      },60);
+    document.getElementById("canvas-btn").onclick=function(event){
+
+      if(ismoving){
+        ismoving=false;
+        this.text="开始运动";
+      }
+      else{
+        ismoving=true;
+        this.text="停止运动";
+      }
+      return false;
+    }
+    document.getElementById("white-color-btn").onclick=function(event){
+      themcolor="white";
+      return false;
+    }
+    document.getElementById("black-color-btn").onclick=function(event){
+      themcolor="black";
+      return false;
+    }
+  }
+
+  function drawball(cxt){
+    var canvas=cxt.canvas;
+    cxt.clearRect(0,0,canvas.width,canvas.height);
+    if(themcolor=="black"){
+      console.log("black-them");
+      cxt.fillStyle="black";
+      cxt.fillRect(0,0,canvas.width,canvas.height);
+    }
+    cxt.globalCompositeOperation="xor";
+    for(var i=0;i<balls.length;i++){
+      cxt.beginPath();
+      cxt.fillStyle=balls[i].color;
+      cxt.arc(balls[i].x,balls[i].y,balls[i].r,0,2*Math.PI);
+      cxt.fill();
+    }
+
+  }
+
+  function update(){
+    for(var i=0;i<balls.length;i++){
+      balls[i].x+=balls[i].vx;
+      balls[i].y+=balls[i].vy;
+      if(balls[i].x-balls[i].r<0){
+        balls[i].vx=-balls[i].vx;
+        balls[i].x=balls[i].r;
+      }
+      if(balls[i].x+balls[i].r>canvas.width){
+        balls[i].vx=-balls[i].vx;
+        balls[i].x=canvas.width-balls[i].r;
+      }
+      if(balls[i].y-balls[i].r<0){
+        balls[i].vy=-balls[i].vy;
+        balls[i].y=balls[i].r;
+      }
+      if(balls[i].y+balls[i].r>canvas.height){
+        balls[i].vy=-balls[i].vy;
+        balls[i].y=canvas.height-balls[i].r;
+      }
+    }
+  }
+</script>
+</body>
+</html>
