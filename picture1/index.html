@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="canvas" style="border:1px solid #aaa;display:block;margin:50px auto;">
+    当前浏览器不支持Canvas，请更换浏览器后再试
+</canvas>
+
+<script>
+    window.onload = function(){
+
+        var canvas = document.getElementById("canvas");
+
+        canvas.width = 1200;
+        canvas.height = 1000;
+
+        var context=canvas.getContext("2d");
+
+        //arcTotest
+        //arcTotest(context,100,100,500,100,500,600,200)
+        /*圆角矩形-2048棋盘
+        drawRoundedRect(context,150,150,10,500,500,5,"brown","brown")
+        for(var i=0;i<4;i++){
+          for(var j=0;j<4;j++){
+            drawRoundedRect(context,170+120*i,170+j*120,8,100,100,2,'green','yellow');
+
+          }
+        }*/
+        /*渐变*/var grd=context.createRadialGradient(canvas.width/2,0,0,canvas.width,0,canvas.height);
+        grd.addColorStop(0.0,"#555");
+        grd.addColorStop(1.0,"#035");
+        context.fillStyle=grd;
+        context.fillRect(0,0,canvas.width,canvas.height);
+       /* context.moveTo(100,100);
+        context.lineTo(700,700);
+        context.lineWidth=2;
+        context.strokeStyle="#a3c";
+        context.stroke();*/
+
+       /* context.lineWidth=3;
+
+        context.beginPath();
+        context.moveTo(100,100);
+        context.lineTo(200,200);
+        context.lineTo(100,300);
+        context.strokeStyle="#a7c";
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(200,100);
+        context.lineTo(300,200);
+        context.lineTo(200,300);
+        context.strokeStyle="#3be";
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(300,100);
+        context.lineTo(400,200);
+        context.lineTo(300,300);
+        context.strokeStyle="#3d2";
+        context.stroke();
+        */
+       /*调用矩形函数
+        drawRect(context,100,100,200,100,10,"#c63","2ed");
+        drawRect2(context,180,180,200,200,5,"red","green");
+        drawRect3(context,500,500,100,100,5,"orange","rgba(100,45,200,0.2");
+        drawRect4(context,300,300,100,150,5,"blue","black");*/
+
+       /*调用五角星*/
+       for(var i=0;i<200;i++){
+        var x=Math.random()*canvas.width;
+        var y=Math.random()*canvas.height*0.45;
+        var r=Math.random()*5+5;
+        var a=Math.random()*360;
+        pentagram(context,x,y,r,r/2.0,3,'yellow',a);
+       }
+       /*调用月亮*/
+       drawMoon(context,900,200,100,50,"yellow");
+       /*调用绿地*/
+       drawLand(context,300,400,900,700,1200,600);
+       //添加文字
+       context.save();
+       context.font="bold 40px 黑体";
+       context.textAlign="left";
+       context.fillStyle="white";
+       context.fillText("欢迎来到慕课网学习《Canvas》",100,900);
+       context.textAlign="right";
+       context.fillText("———大家加油",1100,950);
+       context.restore();
+
+       /*渐变
+       var grd=context.createLinearGradient(0,0,800,800);
+       grd.addColorStop(0.0,"green");
+       grd.addColorStop(0.3,"blue");
+       grd.addColorStop(0.7,"red");
+       grd.addColorStop(1.0,"black");
+       context.fillStyle=grd;
+       context.fillRect(0,0,800,800);*/
+
+    }
+    /*矩形函数
+    function drawRect(cxt,x,y,width,height,lw,lcolor,lfill){
+        cxt.lineWidth=lw;
+        cxt.beginPath();
+        cxt.moveTo(x,y);
+        cxt.lineTo(x+width,y);
+        cxt.lineTo(x+width,y+height);
+        cxt.lineTo(x,y+height);
+        cxt.closePath();
+
+        cxt.strokeStyle=lcolor;
+        cxt.fillStyle="lfill";
+
+        cxt.fill();
+        cxt.stroke();
+    }
+
+    function drawRect2(cxt,x,y,width,height,lw,lcolor,lfill){
+        cxt.lineWidth=lw;
+
+        cxt.strokeStyle=lcolor;
+        cxt.rect(x,y,width,height);
+        cxt.strokeRect(x,y,width,height);
+
+    }
+    function drawRect3(cxt,x,y,width,height,lw,lcolor,lfill){
+        cxt.lineWidth=lw;
+        cxt.fillStyle=lfill;
+        cxt.strokeStyle=lcolor;
+        cxt.strokeRect(x,y,width,height);cxt.fillRect(x,y,width,height);
+    }
+    function drawRect4(cxt,x,y,width,height,lw,lcolor,lfill){
+        cxt.lineWidth=lw;
+        cxt.fillStyle=lfill;
+        cxt.strokeStyle=lcolor;
+        cxt.fillRect(x,y,width,height);
+    }*/
+  function pentagram(cxt,roundx,roundy,R,r,lWidth,lineColor,rot){
+    cxt.lineWidth=lWidth;
+    cxt.strokeStyle=lineColor;
+    cxt.fillStyle='yellow';
+
+    cxt.lineJoin='round';//round,miter(default)
+    cxt.save();
+    cxt.translate(roundx,roundy);
+    cxt.rotate(rot);
+    cxt.beginPath();
+    //cxt.scale(R,r);
+    drawStar(cxt,R,r);
+    cxt.closePath();
+    cxt.fill();
+    cxt.stroke();
+    cxt.restore();
+  }
+
+  function drawStar(cxt,R,r){
+    for(var i=0;i<5;i++){
+       X=R*Math.cos(2*Math.PI/360*(18+72*i));
+       Y=-R*Math.sin(2*Math.PI/360*(18+72*i));
+       x=r*Math.cos(2*Math.PI/360*(54+72*i));
+       y=-r*Math.sin(2*Math.PI/360*(54+72*i));
+
+       cxt.lineTo(X,Y);
+       cxt.lineTo(x,y);
+   }
+  }
+  function drawRoundedRect(context,x,y,r,width,height,lineWidth,lineColor,fillColor){
+        context.save();
+        context.translate(x,y)
+        context.lineWidth=lineWidth||1;
+        context.strokeStyle=lineColor||"black";
+        context.fillStyle=fillColor;
+        rounded_rectangle(context,x,y,r,width,height)
+        context.fill();
+        context.stroke();
+        context.restore();
+
+
+  }
+ function rounded_rectangle(context,x,y,r,width,height){
+
+        context.beginPath();
+
+        /*context.arc(x,y,r,1*Math.PI,1.5*Math.PI);
+        context.lineTo(x+width-2*r,y-r);
+        context.arc(x+width-2*r,y,r,1.5*Math.PI,0);
+
+        context.arc(x+width-2*r,height-2*r,r,0,0.5*Math.PI);
+        context.arc(x,height-2*r,r,0.5*Math.PI,1*Math.PI);
+        */
+        context.arc(width-r,height-r,r,0,Math.PI/2);
+        context.lineTo(r,height);
+        context.arc(r,height-r,r,Math.PI/2,Math.PI);
+        context.lineTo(0,r);
+        context.arc(r,r,r,Math.PI,Math.PI*3/2);
+        context.lineTo(width-r,0);
+        context.arc(width-r,r,r,Math.PI*3/2,Math.PI*2);
+
+        context.closePath();
+ }
+ //arcTotest
+ function  arcTotest(cxt,x0,y0,x1,y1,x2,y2,r) {
+        //auxiliary line
+        cxt.save();
+        cxt.strokeStyle='grey';
+        cxt.moveTo(x0,y0);
+        cxt.lineTo(x1,y1);
+        cxt.lineTo(x2,y2);
+        cxt.stroke();
+
+        cxt.beginPath();
+        cxt.moveTo(x0,y0);
+        cxt.strokeStyle="red";
+        cxt.arcTo(x1,y1,x2,y2,r);
+        cxt.stroke();
+        cxt.restore();
+ }
+ function drawMoon(cxt,x,y,R,r,fillColor) {
+
+
+  cxt.save();
+  cxt.fillStyle=fillColor;
+  //cxt.strokeStyle='white';
+  cxt.beginPath();
+  cxt.arc(x,y,R,0.5*Math.PI,1.5*Math.PI,true);
+  cxt.moveTo(x,y-R)
+  cxt.quadraticCurveTo(x+100,y,x,y+R);
+  cxt.closePath();
+  cxt.fill();
+  cxt.restore();
+  //cxt.stroke();
+ }
+ /*function disc(R,r){
+ var d=Math.sqrt(Math.pow(R,4)/(r*r-R*R));
+  return d;
+
+ }*/
+ //绿地
+ function drawLand(cxt,x1,y1,x2,y2,x3,y3){
+  cxt.save();
+  var grd=cxt.createLinearGradient(0,1000,0,600);
+  grd.addColorStop(0.0,"#030");
+  grd.addColorStop(1.0,"#580");
+  cxt.fillStyle=grd;
+  cxt.beginPath();
+  cxt.moveTo(0,600);
+  cxt.bezierCurveTo(x1,y1,x2,y2,x3,y3);
+  cxt.lineTo(1200,1000);
+  cxt.lineTo(0,1000);
+  cxt.closePath();
+  cxt.fill();
+  cxt.restore();
+ }
+</script>
+</body>
+</html>
