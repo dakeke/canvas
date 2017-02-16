@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>searchlight</title>
+</head>
+<body>
+<canvas id="canvas" style="border: 1px solid black;display: block;margin:60px auto;"></canvas>
+<script type="text/javascript">
+  var searchlight={
+    x:400,
+    y:400,
+    r:150,
+    vx:Math.random()*5+10,
+    vy:Math.random()*5+10
+  }
+  window.onload=function(){
+    var canvas=document.getElementById("canvas");
+    var context=canvas.getContext("2d");
+
+    canvas.width=800;
+    canvas.height=800;
+    //绘制探照灯效果
+    setInterval(function(){
+      render(context);
+      update(canvas.width,canvas.height);
+    },50);
+
+  }
+  function render(context) {
+    var canvas=context.canvas;
+    context.clearRect(0,0,canvas.width,canvas.height);
+
+    context.fillStyle="black";//设置背景颜色
+    context.fillRect(0,0,canvas.width,canvas.height);
+
+    context.save();//为什么需要save。restore
+    context.beginPath();
+    context.fillStyle="white";
+   // context.arc(searchlight.x,searchlight.y,searchlight.r,0,2*Math.PI);
+    pentagram(context,400,400,30+searchlight.x,10+searchlight.y,1,"white",30)
+    context.fill();
+    context.clip();//剪辑的形状要绘制出来
+
+    context.beginPath();
+    context.font="bold 40px 黑体";
+    context.fillStyle="red";
+    context.textAlign="center";
+    context.fillText("Canvas",300,100);
+    context.fillText("is",300,200);
+    context.fillText("interesting",300,300);
+    context.restore();
+
+  }
+  function pentagram(cxt,roundx,roundy,R,r,lWidth,lineColor,rot){
+    cxt.lineWidth=lWidth;
+    cxt.strokeStyle=lineColor;
+    cxt.fillStyle='yellow';
+
+    cxt.lineJoin='round';//round,miter(default)
+    cxt.save();
+    cxt.translate(roundx,roundy);
+    cxt.rotate(rot);
+    cxt.beginPath();
+    //cxt.scale(R,r);
+    drawStar(cxt,R,r);
+    cxt.closePath();
+    cxt.fill();
+    cxt.stroke();
+    cxt.restore();
+  }
+  function drawStar(cxt,R,r){
+    for(var i=0;i<5;i++){
+       X=R*Math.cos(2*Math.PI/360*(18+72*i));
+       Y=-R*Math.sin(2*Math.PI/360*(18+72*i));
+       x=r*Math.cos(2*Math.PI/360*(54+72*i));
+       y=-r*Math.sin(2*Math.PI/360*(54+72*i));
+
+       cxt.lineTo(X,Y);
+       cxt.lineTo(x,y);
+   }
+  }
+  function update(width,height){
+    searchlight.x+=searchlight.vx;
+    searchlight.y+=searchlight.vy;
+    if(searchlight.x-searchlight.r<0){
+      searchlight.vx=-searchlight.vx;
+      searchlight.x=searchlight.r;
+    }
+    if(searchlight.x+searchlight.r>width){
+      searchlight.vx=-searchlight.vx;
+      searchlight.x=width-searchlight.r;
+    }
+    if(searchlight.y-searchlight.r<0){
+      searchlight.vy=-searchlight.vy;
+      searchlight.y=searchlight.r;
+    }
+    if(searchlight.y+searchlight.r>height){
+      searchlight.vy=-searchlight.vy;
+      searchlight.y=height-searchlight.r;
+    }
+  }
+</script>
+</body>
+</html>
