@@ -1,13 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .wrap {
-  width: 600px;
-  height: 400px;
-  margin: 50px auto;
+  margin: 0 auto;
   position: relative;
+  overflow: hidden;
 }
 
 img {
-  width: 600px;
-  height: 400px;
+  display: block;
+  margin: 0 auto;
   position: absolute;
   top: 0;
   left: 0;
@@ -41,7 +45,7 @@ img {
 }
 
 #reset-button {
-  left: 160px;
+  left: 50px;
   bottom: 20px;
   background-color: #058;
 }
@@ -51,7 +55,7 @@ img {
 }
 
 #show-button {
-  right: 160px;
+  right: 50px;
   bottom: 20px;
   background-color: #085;
 }
@@ -59,3 +63,4 @@ img {
 #show-button:hover {
   background-color: #074;
 }
+
