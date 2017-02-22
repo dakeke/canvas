@@ -1,5 +1,5 @@
-var canvasWidth = 600,
-    canvasHeight = 400;
+var canvasWidth = window.innerWidth,
+    canvasHeight = window.innerHeight;
 
 var canvas = document.getElementById('canvas'),
     context = canvas.getContext('2d');
@@ -11,14 +11,29 @@ var image = new Image();
 image.src = 'D://The front-end/canvas/photo/img/iu.jpg';
 var radius = 50,
     clipper = {x: 600, y: 400, r: radius};
-
+    leftMargin = 0, topMargin = 0;
 image.onload = function(e) {
+    var dom = document;
+    var wrap = dom.getElementsByClassName('wrap')[0],
+        img = dom.getElementsByTagName('img')[0];
+    wrap.style.width = canvasWidth + 'px';
+    wrap.style.height = canvasHeight + 'px';
+    img.style.width = image.width + 'px';
+    img.style.height = image.height + 'px';
+
+    leftMargin = (image.width - canvas.width)/2;
+    topMargin = (image.height - canvas.height)/2;
+    img.style.top = String(-topMargin) + 'px';
+    img.style.left = String(-leftMargin) + 'px';
+
     initCanvas();
 }
 
 function initCanvas() {
-    clipper = {x: Math.random()*(canvas.width-2*radius)+radius,
-               y: Math.random()*(canvas.height-2*radius)+radius, r: radius}
+    var theTop = topMargin < 0 ? -topMargin:0,
+        theLeft = leftMargin < 0 ? -leftMargin:0;
+    clipper = {x: Math.random()*(canvas.width-2*radius-2*theLeft)+radius+theLeft,
+               y: Math.random()*(canvas.height-2*radius-2*theTop)+radius+theTop, r: radius}
     draw(image, clipper);
 }
 
@@ -33,8 +48,11 @@ function draw(image,clipper) {
 
     context.save();
     setClipper(clipper);
-    context.drawImage(image, 0, 0, 600, 400);
-    context.restore();
+    context.drawImage(image, Math.max(leftMargin, 0), Math.max(topMargin, 0),
+                      Math.min(canvas.width, image.width), Math.min(canvas.height, image.height),
+                      leftMargin < 0 ? -leftMargin:0, topMargin < 0 ? -topMargin:0,
+                      Math.min(canvas.width, image.width), Math.min(canvas.height, image.height));
+   context.restore();
 }
 
 function show() {
